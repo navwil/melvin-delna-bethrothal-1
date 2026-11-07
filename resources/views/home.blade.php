@@ -790,8 +790,9 @@ if (isset($detail) && count($detail) > 0) {
             border: 1.5px solid rgba(59, 130, 246, 0.25);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
             transition: transform 0.35s ease, box-shadow 0.35s ease;
-            aspect-ratio: 4/5;
             width: 100%;
+            height: 380px;
+            min-height: 320px;
         }
 
         .gallery-card-wrap:hover {
@@ -804,15 +805,19 @@ if (isset($detail) && count($detail) > 0) {
             display: block;
             width: 100%;
             height: 100%;
+            min-height: 100%;
             position: relative;
             overflow: hidden;
             text-decoration: none !important;
+            cursor: pointer;
         }
 
         .gallery-card-img {
             width: 100%;
             height: 100%;
+            min-height: 100%;
             object-fit: cover;
+            object-position: center;
             display: block;
             transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
@@ -1121,11 +1126,13 @@ if (isset($detail) && count($detail) > 0) {
 
             /* Gallery - 2 columns on tablets */
             .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1.5rem !important;
             }
             .gallery-card-wrap {
-                border-radius: 18px;
+                height: 280px !important;
+                min-height: 240px !important;
+                border-radius: 18px !important;
             }
 
             /* Wishes - Stack vertically */
@@ -1168,11 +1175,13 @@ if (isset($detail) && count($detail) > 0) {
 
             /* Gallery - 1 column on phones */
             .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 1.6rem;
+                grid-template-columns: 1fr !important;
+                gap: 1.8rem !important;
             }
             .gallery-card-wrap {
-                border-radius: 20px;
+                height: 360px !important;
+                min-height: 300px !important;
+                border-radius: 20px !important;
             }
 
             /* Countdown on small phones */
@@ -1525,12 +1534,15 @@ if (isset($detail) && count($detail) > 0) {
                     <div id="tab-gallery" class="tab-content__item">
                         <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
                             <div class="column">
-                                <h2>Moments &amp; Memories</h2>
+                                <h2>Gallery</h2>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="column text-center">
+                                <div style="color: #dfba63; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.25rem; text-transform: uppercase; margin-bottom: 1.2rem; display: inline-block;">
+                                    ✨ Moments &amp; Memories ✨
+                                </div>
                                 <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #cbd5e1;">
                                     Cherished glimpses of our story, celebrations, and unforgettable memories.
                                 </p>
@@ -1538,10 +1550,19 @@ if (isset($detail) && count($detail) > 0) {
                         </div>
 
                         <div class="unified-content-box tz-gallery modern-gallery">
-                            @foreach ($galery as $item)
-                            <div class="gallery-grid">
-                                @php
-                                    $photos = [
+                            @php
+                                $galleryPhotos = [
+                                    ['file' => 'engagement.jpeg', 'caption' => 'Melvin & Delna'],
+                                    ['file' => 'outing.jpeg', 'caption' => 'Sweet Outing'],
+                                    ['file' => 'airpt_1.jpeg', 'caption' => 'Travel Memories'],
+                                    ['file' => 'airpt_2.jpeg', 'caption' => 'Journey Together'],
+                                    ['file' => 'delna.jpeg', 'caption' => 'Delna Tom'],
+                                    ['file' => 'melvin.jpeg', 'caption' => 'Melvin Sabu'],
+                                ];
+
+                                if (isset($galery) && count($galery) > 0) {
+                                    $item = $galery->first();
+                                    $dbPhotos = [
                                         ['file' => $item->gallery1, 'caption' => 'Melvin & Delna'],
                                         ['file' => $item->gallery2, 'caption' => 'Sweet Outing'],
                                         ['file' => $item->gallery3, 'caption' => 'Travel Memories'],
@@ -1549,27 +1570,22 @@ if (isset($detail) && count($detail) > 0) {
                                         ['file' => $item->gallery5, 'caption' => 'Delna Tom'],
                                         ['file' => $item->gallery6, 'caption' => 'Melvin Sabu'],
                                     ];
-                                @endphp
+                                    $validDb = array_filter($dbPhotos, fn($p) => !empty($p['file']));
+                                    if (count($validDb) > 0) {
+                                        $galleryPhotos = array_values($validDb);
+                                    }
+                                }
+                            @endphp
 
-                                @foreach ($photos as $photo)
-                                @if(!empty($photo['file']))
+                            <div class="gallery-grid">
+                                @foreach ($galleryPhotos as $photo)
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="{{ url('/storage/' . $photo['file']) }}" data-caption="{{ $photo['caption'] }}">
-                                        <img src="{{ url('/storage/' . $photo['file']) }}" alt="{{ $photo['caption'] }}" class="gallery-card-img" loading="lazy">
+                                        <img src="{{ url('/storage/' . $photo['file']) }}" alt="{{ $photo['caption'] }}" class="gallery-card-img">
                                     </a>
                                 </div>
-                                @endif
                                 @endforeach
                             </div>
-
-                            @if (isset($item->video) && $item->video !== '-' && !empty($item->video))
-                            <div style="margin-top: 3.5rem; border-radius: 24px; overflow: hidden; box-shadow: 0 14px 35px rgba(0,0,0,0.12);">
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="{{ $item->video }}" title="Invitation Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </div>
-                            @endif
-                            @endforeach
                         </div>
                     </div>
                     <!-- end 03 - tab gallery -->
@@ -1729,6 +1745,26 @@ if (isset($detail) && count($detail) > 0) {
 
         // ScrollSpy to automatically highlight active section while scrolling
         document.addEventListener('DOMContentLoaded', function() {
+            // Direct smooth-scroll for tab links
+            document.querySelectorAll('.tab-nav__list li a').forEach(function(anchor) {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId && targetId.startsWith('#')) {
+                        const targetElem = document.querySelector(targetId);
+                        if (targetElem) {
+                            e.preventDefault();
+                            const navOffset = 80;
+                            const elementPosition = targetElem.getBoundingClientRect().top;
+                            const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+                            window.scrollTo({
+                                top: offsetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+
             const navItems = document.querySelectorAll('.scroll-nav .tab-nav__list li');
             const sections = document.querySelectorAll('.tab-content__item');
             const navList = document.querySelector('.tab-nav__list');

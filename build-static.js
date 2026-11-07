@@ -54,7 +54,6 @@ const indexHtmlContent = `<!DOCTYPE html>
 <html class="no-js" lang="en">
 
 <head>
-    <base href="./">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -812,8 +811,9 @@ const indexHtmlContent = `<!DOCTYPE html>
             border: 1.5px solid rgba(59, 130, 246, 0.25);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
             transition: transform 0.35s ease, box-shadow 0.35s ease;
-            aspect-ratio: 4/5;
             width: 100%;
+            height: 380px;
+            min-height: 320px;
         }
 
         .gallery-card-wrap:hover {
@@ -826,15 +826,19 @@ const indexHtmlContent = `<!DOCTYPE html>
             display: block;
             width: 100%;
             height: 100%;
+            min-height: 100%;
             position: relative;
             overflow: hidden;
             text-decoration: none !important;
+            cursor: pointer;
         }
 
         .gallery-card-img {
             width: 100%;
             height: 100%;
+            min-height: 100%;
             object-fit: cover;
+            object-position: center;
             display: block;
             transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
@@ -1128,12 +1132,15 @@ const indexHtmlContent = `<!DOCTYPE html>
                 padding: 1.3rem 2rem;
             }
 
+            /* Gallery - 2 columns on tablets */
             .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1.5rem !important;
             }
             .gallery-card-wrap {
-                border-radius: 18px;
+                height: 280px !important;
+                min-height: 240px !important;
+                border-radius: 18px !important;
             }
 
             .wishes-grid {
@@ -1171,12 +1178,15 @@ const indexHtmlContent = `<!DOCTYPE html>
                 padding: 4rem 1.2rem 3rem 1.2rem;
             }
 
+            /* Gallery - 1 column on phones */
             .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 1.6rem;
+                grid-template-columns: 1fr !important;
+                gap: 1.8rem !important;
             }
             .gallery-card-wrap {
-                border-radius: 20px;
+                height: 360px !important;
+                min-height: 300px !important;
+                border-radius: 20px !important;
             }
 
             .countdown-luxury-container {
@@ -1516,12 +1526,15 @@ const indexHtmlContent = `<!DOCTYPE html>
                     <div id="tab-gallery" class="tab-content__item">
                         <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
                             <div class="column">
-                                <h2>Moments &amp; Memories</h2>
+                                <h2>Gallery</h2>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="column text-center">
+                                <div style="color: #dfba63; font-size: 1.3rem; font-weight: 700; letter-spacing: 0.25rem; text-transform: uppercase; margin-bottom: 1.2rem; display: inline-block;">
+                                    ✨ Moments &amp; Memories ✨
+                                </div>
                                 <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #cbd5e1;">
                                     Cherished glimpses of our story, celebrations, and unforgettable memories.
                                 </p>
@@ -1532,32 +1545,32 @@ const indexHtmlContent = `<!DOCTYPE html>
                             <div class="gallery-grid">
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="storage/engagement.jpeg" data-caption="Melvin &amp; Delna">
-                                        <img src="storage/engagement.jpeg" alt="Melvin &amp; Delna" class="gallery-card-img" loading="lazy">
+                                        <img src="storage/engagement.jpeg" alt="Melvin &amp; Delna" class="gallery-card-img">
                                     </a>
                                 </div>
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="storage/outing.jpeg" data-caption="Sweet Outing">
-                                        <img src="storage/outing.jpeg" alt="Sweet Outing" class="gallery-card-img" loading="lazy">
+                                        <img src="storage/outing.jpeg" alt="Sweet Outing" class="gallery-card-img">
                                     </a>
                                 </div>
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="storage/airpt_1.jpeg" data-caption="Travel Memories">
-                                        <img src="storage/airpt_1.jpeg" alt="Travel Memories" class="gallery-card-img" loading="lazy">
+                                        <img src="storage/airpt_1.jpeg" alt="Travel Memories" class="gallery-card-img">
                                     </a>
                                 </div>
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="storage/airpt_2.jpeg" data-caption="Journey Together">
-                                        <img src="storage/airpt_2.jpeg" alt="Journey Together" class="gallery-card-img" loading="lazy">
+                                        <img src="storage/airpt_2.jpeg" alt="Journey Together" class="gallery-card-img">
                                     </a>
                                 </div>
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="storage/delna.jpeg" data-caption="Delna Tom">
-                                        <img src="storage/delna.jpeg" alt="Delna Tom" class="gallery-card-img" loading="lazy">
+                                        <img src="storage/delna.jpeg" alt="Delna Tom" class="gallery-card-img">
                                     </a>
                                 </div>
                                 <div class="gallery-card-wrap">
                                     <a class="lightbox gallery-card" href="storage/melvin.jpeg" data-caption="Melvin Sabu">
-                                        <img src="storage/melvin.jpeg" alt="Melvin Sabu" class="gallery-card-img" loading="lazy">
+                                        <img src="storage/melvin.jpeg" alt="Melvin Sabu" class="gallery-card-img">
                                     </a>
                                 </div>
                             </div>
@@ -1727,6 +1740,26 @@ const indexHtmlContent = `<!DOCTYPE html>
         baguetteBox.run('.tz-gallery', {
             animation: 'fadeIn',
             noScrollbars: true
+        });
+
+        // Tab Nav smooth scroll click handler
+        document.querySelectorAll('.tab-nav__list li a').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    const targetElem = document.querySelector(targetId);
+                    if (targetElem) {
+                        e.preventDefault();
+                        const navOffset = 80;
+                        const elementPosition = targetElem.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
         });
 
         // Dynamic Guest Name Personalization from URL (?to=Name)
