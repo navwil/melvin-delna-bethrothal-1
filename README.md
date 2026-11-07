@@ -135,6 +135,33 @@ Access the backend dashboard to manage guests, RSVPs, and settings:
 
 ---
 
+## 🚀 Deploying to Netlify
+
+This repository is pre-configured for **1-click Netlify deployment** using a static distribution in `dist/` and `netlify.toml`.
+
+### Option A: Connect via GitHub (Automatic CI/CD)
+1. Go to [Netlify](https://app.netlify.com/) and click **"Add new site"** > **"Import an existing project"**.
+2. Select **GitHub** and authorize access to repository:
+   ```
+   navwil/melvin-delna-bethrothal-1
+   ```
+3. Netlify will automatically detect `netlify.toml`:
+   - **Build command**: `node build-static.js`
+   - **Publish directory**: `dist`
+4. Click **"Deploy site"**! Your wedding invitation is live with SSL in seconds.
+
+### Option B: Drag & Drop (Instant Manual Deployment)
+1. Run static build locally:
+   ```bash
+   node build-static.js
+   ```
+2. Go to [Netlify Drop](https://app.netlify.com/drop).
+3. Drag and drop the `dist/` folder directly into the browser window.
+
+> **Note on Wishes / Guestbook**: On Netlify, the wishes form integrates natively with **Netlify Forms** (`data-netlify="true"`), so you can view all guest wishes and RSVPs directly in your Netlify Site Dashboard under the "Forms" tab without needing a PHP server.
+
+---
+
 ## 📄 License
 
 This project is open-source and licensed under the [MIT License](LICENSE).

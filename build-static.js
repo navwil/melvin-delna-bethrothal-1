@@ -1,0 +1,1808 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const distDir = path.join(__dirname, 'dist');
+
+// Helper to copy directory recursively
+function copyDirSync(src, dest) {
+    if (!fs.existsSync(src)) return;
+    fs.mkdirSync(dest, { recursive: true });
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+
+    for (let entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+
+        if (entry.isDirectory()) {
+            copyDirSync(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
+
+console.log('Building static production distribution for Netlify...');
+
+// 1. Prepare dist directory
+if (fs.existsSync(distDir)) {
+    fs.rmSync(distDir, { recursive: true, force: true });
+}
+fs.mkdirSync(distDir, { recursive: true });
+
+// 2. Copy Assets
+console.log('Copying assets...');
+copyDirSync(path.join(__dirname, 'public', 'assets'), path.join(distDir, 'assets'));
+
+// 3. Copy storage photos
+console.log('Copying storage photos...');
+copyDirSync(path.join(__dirname, 'storage', 'app', 'public'), path.join(distDir, 'storage'));
+
+// 4. Copy Images folder if exists
+if (fs.existsSync(path.join(__dirname, 'Images'))) {
+    copyDirSync(path.join(__dirname, 'Images'), path.join(distDir, 'Images'));
+}
+
+// 5. Create Netlify _redirects file
+fs.writeFileSync(path.join(distDir, '_redirects'), '/*  /index.html  200\n', 'utf8');
+
+// 6. Generate standalone index.html
+const indexHtmlContent = `<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <base href="./">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Holy Betrothal ceremony & reception of Melvin & Delna" />
+    <meta name="keywords" content="betrothal invitation, engagement, digital invitation, Melvin and Delna" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Melvin & Delna - Holy Betrothal" />
+    <meta property="og:site_name" content="Melvin & Delna Betrothal" />
+    <meta property="og:image" content="storage/engagement.jpeg" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.css">
+    <title>Melvin & Delna - Holy Betrothal</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/undangan/css/vendor.css">
+    <link rel="stylesheet" href="assets/undangan/css/styles.css">
+    <link rel="stylesheet" href="assets/undangan/css/gallery-grid.css">
+
+    <style>
+        :root {
+            --color-1: #1d68bd;
+            --color-1-lighter: #60a5fa;
+            --color-1-light: #3b82f6;
+            --color-1-dark: #1e40af;
+            --color-1-darker: #0f2e5a;
+            --color-2: #0f2e5a;
+            --color-3: #38bdf8;
+            --color-bg: #f8faff;
+            --color-body: #1e293b;
+            --color-btn: #1d68bd;
+            --color-btn-primary: #1d68bd;
+            --color-btn-stroke: #1d68bd;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body {
+            background-color: #f8faff !important;
+            color: #1e293b !important;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        }
+
+        img, video, iframe {
+            max-width: 100%;
+            height: auto;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        /* Intro */
+        .s-intro {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+        }
+
+        .s-intro__bg-single {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover !important;
+            background-position: center center !important;
+        }
+
+        .s-intro__content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 6rem 2rem 4rem 2rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 2.4rem;
+            background: rgba(255, 255, 255, 0.16);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 9999px;
+            font-size: clamp(1.15rem, 3.2vw, 1.35rem);
+            letter-spacing: clamp(0.12rem, 0.4vw, 0.25rem);
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            max-width: 92vw;
+        }
+
+        .hero-couple-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(3rem, 9vw, 6.4rem);
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 1.5rem 0;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            letter-spacing: -0.01em;
+            line-height: 1.15;
+            word-break: break-word;
+        }
+
+        .hero-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.35rem 3.2rem;
+            background: linear-gradient(135deg, #1d68bd 0%, #3b82f6 55%, #60a5fa 100%);
+            color: #ffffff !important;
+            border-radius: 9999px;
+            font-size: clamp(1.45rem, 3.5vw, 1.6rem);
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-decoration: none !important;
+            border: none;
+            box-shadow: 0 12px 30px rgba(29, 104, 189, 0.5);
+            transition: all 0.35s ease;
+            cursor: pointer;
+            max-width: 90vw;
+        }
+
+        .hero-cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(29, 104, 189, 0.65);
+            background: linear-gradient(135deg, #17549c 0%, #2563eb 55%, #3b82f6 100%);
+            color: #ffffff !important;
+        }
+
+        /* Section Container & Continuous Scroll */
+        .s-details {
+            background: #f8faff;
+            padding-top: 2rem;
+        }
+
+        .tab-content__item {
+            opacity: 1 !important;
+            visibility: visible !important;
+            height: auto !important;
+            position: relative !important;
+            top: 0 !important;
+            display: block !important;
+            padding-top: 5rem;
+            margin-bottom: 5rem;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+            padding-bottom: 5rem;
+        }
+
+        #tab-wishes {
+            border-bottom: none;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        /* Floating Nav Bar */
+        .tab-nav.scroll-nav {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 15px;
+            z-index: 999;
+            background: transparent;
+            padding: 0.8rem 1rem;
+            margin-bottom: 2.5rem;
+            width: 100%;
+        }
+
+        .tab-nav__list {
+            display: flex;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1.5px solid #dbeafe;
+            border-radius: 9999px;
+            padding: 0.5rem;
+            gap: 0.5rem;
+            max-width: 660px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+            list-style: none;
+        }
+
+        .tab-nav__list li {
+            flex: 1;
+            text-align: center;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-nav__list li a {
+            display: block;
+            padding: 1rem 1.6rem;
+            font-size: 1.35rem;
+            letter-spacing: 0.06rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #1e3a5f;
+            text-decoration: none;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-nav__list li:hover a {
+            color: #2563eb;
+            background: rgba(239, 246, 255, 0.8);
+        }
+
+        .tab-nav__list li.active,
+        .tab-nav__list li[data-tab-active] {
+            background: linear-gradient(135deg, #1d68bd 0%, #3b82f6 100%);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+        }
+
+        .tab-nav__list li.active a,
+        .tab-nav__list li[data-tab-active] a {
+            color: #ffffff !important;
+            background: transparent !important;
+        }
+
+        #tab-couple, #tab-countdown, #tab-event, #tab-gallery, #tab-wishes {
+            scroll-margin-top: 100px;
+        }
+
+        .tab-content__item-header h2 {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.4rem, 6vw, 3.8rem);
+            text-transform: uppercase;
+            letter-spacing: 0.12rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 1.2rem;
+            color: #0f2e5a;
+            font-weight: 700;
+        }
+
+        .tab-content__item-header h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #1d68bd, #60a5fa);
+            border-radius: 9999px;
+        }
+
+        .unified-content-box {
+            background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 100%);
+            border: 1.5px solid #dbeafe;
+            border-radius: 40px;
+            padding: 4.5rem 3rem 4rem 3rem;
+            box-shadow: 0 16px 45px rgba(59, 130, 246, 0.07);
+            margin: 2rem auto 3rem auto;
+            max-width: 1080px;
+            width: 100%;
+        }
+
+        /* Bride & Groom Cards */
+        .bride-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3.5rem;
+            max-width: 1040px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .bride-grid__item {
+            flex: 1 1 360px;
+            max-width: 440px;
+            display: flex;
+            justify-content: center;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .bride-card {
+            position: relative;
+            background: #ffffff;
+            border-radius: 36px;
+            border: 1.5px solid #dbeafe;
+            box-shadow: 0 20px 48px rgba(59, 130, 246, 0.1), 0 4px 16px rgba(0, 0, 0, 0.03);
+            padding: 4.2rem 3rem 3.6rem 3rem;
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .bride-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 26px 60px rgba(59, 130, 246, 0.18), 0 8px 24px rgba(0, 0, 0, 0.05);
+            border-color: #bfdbfe;
+        }
+
+        .bride-card::before, .event-sample-card::before {
+            content: "";
+            position: absolute;
+            top: -42%;
+            left: -30%;
+            width: 160%;
+            height: 90%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.95) 0%,
+                rgba(255, 255, 255, 0.45) 45%,
+                rgba(255, 255, 255, 0) 72%
+            );
+            transform: rotate(-14deg);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .bride-card::after, .event-sample-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .bride-card-content, .event-card-body {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+        }
+
+        .bride-role-badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: #1d68bd;
+            border: 1px solid #bfdbfe;
+            border-radius: 9999px;
+            padding: 0.4rem 1.6rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.15rem;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+        }
+
+        .bride-card-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: #0f2e5a;
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+            line-height: 1.2;
+        }
+
+        .bride-card-img-wrap {
+            margin-bottom: 2rem;
+            display: inline-block;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.14);
+            border: 2px solid #eff6ff;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .bride-card-img {
+            width: 100%;
+            max-width: 100%;
+            height: 440px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.45s ease;
+        }
+
+        .bride-card:hover .bride-card-img {
+            transform: scale(1.03);
+        }
+
+        .bride-card-relation {
+            color: #1e293b;
+            font-size: 1.7rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.01em;
+        }
+
+        .bride-card-address {
+            color: #64748b;
+            font-size: 1.55rem;
+            margin-top: 0.4rem;
+            line-height: 1.5;
+        }
+
+        /* Countdown */
+        .countdown-luxury-container {
+            position: relative;
+            background: radial-gradient(ellipse at 50% 28%, #132a4a 0%, #0c1d35 55%, #061122 100%);
+            border-radius: 40px;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            box-shadow: 0 24px 60px rgba(6, 17, 34, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+            padding: 6.5rem 3rem 5.5rem 3rem;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto 3rem auto;
+            overflow: hidden;
+        }
+
+        .countdown-luxury-container::before {
+            content: "";
+            position: absolute;
+            top: -42%;
+            left: -30%;
+            width: 160%;
+            height: 90%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.02) 45%,
+                rgba(255, 255, 255, 0) 72%
+            );
+            transform: rotate(-14deg);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .countdown-luxury-inner {
+            position: relative;
+            z-index: 3;
+        }
+
+        .countdown-luxury-sub {
+            color: #dfba63;
+            font-size: clamp(1.15rem, 3.2vw, 1.35rem);
+            font-weight: 700;
+            letter-spacing: clamp(0.18em, 0.5vw, 0.28em);
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .countdown-luxury-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.4rem, 6.5vw, 4.4rem);
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.25;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin: 0 auto 3.5rem auto;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+        }
+
+        .countdown-luxury-grid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.8rem;
+            max-width: 520px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .countdown-luxury-row {
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            width: 100%;
+        }
+
+        .countdown-luxury-box {
+            flex: 1 1 0px;
+            max-width: 145px;
+            aspect-ratio: 1 / 1.05;
+            min-height: 125px;
+            background: linear-gradient(180deg, rgba(32, 65, 115, 0.55) 0%, rgba(14, 30, 56, 0.75) 100%);
+            border: 1.5px solid rgba(223, 186, 99, 0.75);
+            border-radius: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 0.8rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+            min-width: 0;
+        }
+
+        .countdown-luxury-row.bottom-row .countdown-luxury-box {
+            flex: 0 1 calc((100% - 3.6rem) / 3);
+            width: calc((100% - 3.6rem) / 3);
+            max-width: 145px;
+        }
+
+        .countdown-luxury-box:hover {
+            transform: translateY(-4px);
+            border-color: #dfba63;
+            box-shadow: 0 16px 35px rgba(223, 186, 99, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .countdown-luxury-box .luxury-num {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 700;
+            color: #fef3c7;
+            line-height: 1;
+            display: block;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .countdown-luxury-box .luxury-lbl {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #cbd5e1;
+            margin-top: 0.6rem;
+            display: block;
+        }
+
+        .countdown-venue-info {
+            color: #94a3b8;
+            font-size: 1.6rem;
+            margin-top: 3.5rem;
+            line-height: 1.6;
+        }
+
+        .countdown-venue-info strong {
+            color: #ffffff;
+        }
+
+        .countdown-calendar-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.35rem 3rem;
+            background: linear-gradient(135deg, #1d68bd 0%, #3b82f6 100%);
+            color: #ffffff !important;
+            border-radius: 9999px;
+            font-size: 1.55rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            margin-top: 2rem;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .countdown-calendar-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.45);
+            background: linear-gradient(135deg, #17549c 0%, #2563eb 100%);
+            color: #ffffff !important;
+        }
+
+        /* Events */
+        .events-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3.5rem;
+            width: 100%;
+        }
+
+        .events-grid__item {
+            flex: 1 1 360px;
+            max-width: 440px;
+            display: flex;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .event-sample-card {
+            position: relative;
+            background: #ffffff;
+            border-radius: 36px;
+            border: 1.5px solid #dbeafe;
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.12), 0 4px 16px rgba(0, 0, 0, 0.03);
+            padding: 4.8rem 3.2rem 4.2rem 3.2rem;
+            text-align: center;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.35s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .event-sample-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 28px 65px rgba(59, 130, 246, 0.22), 0 8px 24px rgba(0, 0, 0, 0.05);
+            border-color: #bfdbfe;
+        }
+
+        .event-card-heart {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2.2rem;
+        }
+
+        .event-card-heart svg {
+            width: 40px;
+            height: 40px;
+            fill: #3b82f6;
+            filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
+        }
+
+        .event-card-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            color: #0f2e5a;
+            font-size: 3.2rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin: 0 0 1.6rem 0;
+            line-height: 1.25;
+        }
+
+        .event-card-date {
+            color: #1a365d;
+            font-size: 1.95rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .event-card-time {
+            color: #1a365d;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .event-card-venue {
+            color: #556987;
+            font-size: 1.6rem;
+            line-height: 1.65;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+
+        .event-card-attire {
+            color: #64748b;
+            font-size: 1.5rem;
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: 3rem;
+        }
+
+        .event-card-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 320px;
+            padding: 1.45rem 2.8rem;
+            background: linear-gradient(135deg, #1d68bd 0%, #3b82f6 55%, #60a5fa 100%);
+            color: #ffffff !important;
+            border-radius: 9999px;
+            font-size: 1.65rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            text-decoration: none !important;
+            border: none;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.38);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: auto;
+        }
+
+        .event-card-btn:hover {
+            background: linear-gradient(135deg, #17549c 0%, #2563eb 55%, #3b82f6 100%);
+            box-shadow: 0 14px 30px rgba(37, 99, 235, 0.48);
+            transform: translateY(-2px);
+            color: #ffffff !important;
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+            gap: 2.4rem;
+            max-width: 1040px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .gallery-card-wrap {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1.5px solid #dbeafe;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            aspect-ratio: 4/5;
+            width: 100%;
+        }
+
+        .gallery-card-wrap:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 45px rgba(37, 99, 235, 0.18);
+            border-color: #bfdbfe;
+        }
+
+        .gallery-card {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none !important;
+        }
+
+        .gallery-card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .gallery-card:hover .gallery-card-img {
+            transform: scale(1.06);
+        }
+
+        /* Wishes */
+        .wishes-container-box {
+            background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 100%);
+            border: 1.5px solid #dbeafe;
+            border-radius: 40px;
+            padding: 4.5rem 3rem 4rem 3rem;
+            box-shadow: 0 16px 45px rgba(59, 130, 246, 0.07);
+            margin: 2rem auto 3rem auto;
+            max-width: 1080px;
+            width: 100%;
+        }
+
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            width: 100%;
+        }
+
+        .wishes-grid__col {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .wish-form-card {
+            background: #ffffff;
+            border-radius: 28px;
+            border: 1.5px solid #dbeafe;
+            padding: 3.5rem 2.8rem;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+            height: 100%;
+            width: 100%;
+        }
+
+        .wishes-feed-card {
+            background: #ffffff;
+            border-radius: 28px;
+            border: 1.5px solid #dbeafe;
+            padding: 3.5rem 2.8rem;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .wishes-feed-scroll {
+            max-height: 440px;
+            overflow-y: auto;
+            padding-right: 0.8rem;
+        }
+
+        /* Footer */
+        .modern-footer {
+            background: #0a192f;
+            color: #94a3b8;
+            padding: 5rem 2rem 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-couple-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 2.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-event-date {
+            color: #60a5fa;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.1rem;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .footer-copyright {
+            font-size: 1.35rem;
+            color: #64748b;
+        }
+
+        .ss-go-top a {
+            background: linear-gradient(135deg, #1d68bd, #3b82f6) !important;
+            color: #ffffff !important;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4) !important;
+            border-radius: 50% !important;
+        }
+
+        /* Breakpoints */
+        @media (max-width: 992px) {
+            .tab-nav.scroll-nav {
+                padding: 0.6rem 0.8rem;
+            }
+            .unified-content-box, .wishes-container-box {
+                padding: 3.8rem 2.2rem 3.2rem 2.2rem;
+                border-radius: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                width: 100% !important;
+                padding-left: 1.4rem !important;
+                padding-right: 1.4rem !important;
+            }
+
+            .tab-content__item {
+                padding-top: 3.5rem;
+                margin-bottom: 3.5rem;
+                padding-bottom: 3.5rem;
+            }
+
+            .tab-nav.scroll-nav {
+                top: 8px;
+                padding: 0.4rem 0.6rem;
+                margin-bottom: 2rem;
+            }
+            .tab-nav__list {
+                display: flex;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                justify-content: flex-start;
+                padding: 0.35rem 0.5rem;
+                gap: 0.4rem;
+                border-radius: 9999px;
+                max-width: 100%;
+                width: 100%;
+                flex-wrap: nowrap;
+            }
+            .tab-nav__list::-webkit-scrollbar {
+                display: none;
+            }
+            .tab-nav__list li {
+                flex: 0 0 auto;
+            }
+            .tab-nav__list li a {
+                padding: 0.8rem 1.4rem;
+                font-size: 1.25rem;
+                letter-spacing: 0.04rem;
+                white-space: nowrap;
+            }
+
+            .unified-content-box, .wishes-container-box {
+                padding: 3rem 1.6rem 2.5rem 1.6rem;
+                border-radius: 28px;
+                margin: 1.5rem auto 2.5rem auto;
+            }
+
+            .bride-grid {
+                gap: 2.5rem;
+            }
+            .bride-grid__item {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            .bride-card {
+                padding: 3.2rem 1.8rem 2.8rem 1.8rem;
+                border-radius: 28px;
+            }
+            .bride-card-name {
+                font-size: clamp(2.4rem, 6.5vw, 3rem);
+            }
+            .bride-card-img-wrap {
+                max-width: 300px;
+            }
+            .bride-card-img {
+                height: auto;
+                aspect-ratio: 4/5;
+                max-height: 380px;
+            }
+
+            .countdown-luxury-container {
+                padding: 4.5rem 1.6rem 3.5rem 1.6rem;
+                border-radius: 28px;
+                margin: 1.5rem auto 2.5rem auto;
+            }
+            .countdown-luxury-title {
+                margin-bottom: 2.5rem;
+            }
+            .countdown-luxury-grid {
+                gap: 1.2rem;
+            }
+            .countdown-luxury-row {
+                gap: 1.2rem;
+            }
+            .countdown-luxury-box {
+                padding: 1.1rem 0.4rem;
+                min-height: 95px;
+                border-radius: 18px;
+            }
+            .countdown-luxury-row.bottom-row .countdown-luxury-box {
+                flex: 0 1 calc((100% - 2.4rem) / 3);
+                width: calc((100% - 2.4rem) / 3);
+            }
+            .countdown-venue-info {
+                font-size: 1.45rem;
+                margin-top: 2.8rem;
+            }
+
+            .events-grid {
+                gap: 2.2rem;
+            }
+            .events-grid__item {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+            .event-sample-card {
+                padding: 3.2rem 1.8rem 2.8rem 1.8rem;
+                border-radius: 28px;
+            }
+            .event-card-title {
+                font-size: clamp(2.4rem, 6.5vw, 3rem);
+            }
+            .event-card-btn {
+                max-width: 100%;
+                font-size: 1.5rem;
+                padding: 1.3rem 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            .gallery-card-wrap {
+                border-radius: 18px;
+            }
+
+            .wishes-grid {
+                grid-template-columns: 1fr;
+                gap: 2.4rem;
+            }
+            .wish-form-card, .wishes-feed-card {
+                padding: 2.6rem 1.6rem;
+                border-radius: 24px;
+            }
+
+            .modern-footer {
+                padding: 4rem 1.5rem 3rem 1.5rem;
+            }
+            .footer-couple-name {
+                font-size: 2.4rem;
+            }
+            .footer-event-date {
+                font-size: 1.35rem;
+            }
+
+            .ss-go-top {
+                bottom: 20px;
+                right: 18px;
+            }
+            .ss-go-top a {
+                width: 44px !important;
+                height: 44px !important;
+                line-height: 44px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .s-intro__content {
+                padding: 4rem 1.2rem 3rem 1.2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1.6rem;
+            }
+            .gallery-card-wrap {
+                border-radius: 20px;
+            }
+
+            .countdown-luxury-container {
+                padding: 3.5rem 1.2rem 2.8rem 1.2rem;
+                border-radius: 22px;
+            }
+            .countdown-luxury-grid {
+                gap: 0.8rem;
+            }
+            .countdown-luxury-row {
+                gap: 0.8rem;
+            }
+            .countdown-luxury-box {
+                padding: 0.9rem 0.2rem;
+                min-height: 85px;
+                border-radius: 14px;
+            }
+            .countdown-luxury-row.bottom-row .countdown-luxury-box {
+                flex: 0 1 calc((100% - 1.6rem) / 3);
+                width: calc((100% - 1.6rem) / 3);
+            }
+            .countdown-luxury-box .luxury-num {
+                font-size: 2.2rem;
+            }
+            .countdown-luxury-box .luxury-lbl {
+                font-size: 0.95rem;
+                letter-spacing: 0.08em;
+            }
+            .countdown-calendar-btn {
+                max-width: 100%;
+                padding: 1.25rem 2rem;
+                font-size: 1.45rem;
+            }
+
+            input, textarea {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+
+<body id="top" class="ss-preload theme-slides">
+
+    <!-- preloader -->
+    <div id="preloader">
+        <div id="loader" class="dots-fade">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- Intro -->
+    <section id="intro" class="s-intro">
+        <div class="s-intro__bg-single" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, rgba(10, 25, 47, 0.45) 0%, rgba(15, 46, 90, 0.6) 50%, rgba(10, 25, 47, 0.82) 100%), url('storage/engagement.jpeg') no-repeat center center; background-size: cover;"></div>
+
+        <div class="row s-intro__content">
+            <div class="column">
+                <div class="hero-badge" id="heroBadge">
+                    <span>✨ The Holy Betrothal ✨</span>
+                </div>
+
+                <h1 class="hero-couple-title">
+                    Melvin &amp; Delna
+                </h1>
+
+                <div style="margin-top: 3.5rem;">
+                    <a href="#tab-couple" class="hero-cta-btn smoothscroll">
+                        <span>Open Invitation</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-left: 8px;">
+                            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="s-intro__scroll">
+            <a href="#tab-couple" class="smoothscroll" style="color: rgba(255, 255, 255, 0.85); font-weight: 600; letter-spacing: 0.15rem; font-size: 1.3rem;">
+                Scroll Down &darr;
+            </a>
+        </div>
+    </section>
+
+    <!-- Details -->
+    <section id="details" class="s-details">
+        <div class="row">
+            <div class="column">
+
+                <nav class="tab-nav scroll-nav">
+                    <ul class="tab-nav__list">
+                        <li class="active" data-section="tab-couple">
+                            <a href="#tab-couple" class="smoothscroll">
+                                <span>Bride &amp; Groom</span>
+                            </a>
+                        </li>
+                        <li data-section="tab-countdown">
+                            <a href="#tab-countdown" class="smoothscroll">
+                                <span>Save The Date</span>
+                            </a>
+                        </li>
+                        <li data-section="tab-event">
+                            <a href="#tab-event" class="smoothscroll">
+                                <span>Events</span>
+                            </a>
+                        </li>
+                        <li data-section="tab-gallery">
+                            <a href="#tab-gallery" class="smoothscroll">
+                                <span>Gallery</span>
+                            </a>
+                        </li>
+                        <li data-section="tab-wishes">
+                            <a href="#tab-wishes" class="smoothscroll">
+                                <span>Wishes</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="tab-content">
+
+                    <!-- 01 - Couple -->
+                    <div id="tab-couple" class="text-center tab-content__item">
+                        <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
+                            <div class="column">
+                                <h2>Bride &amp; Groom</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="column text-center">
+                                <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #556987;">
+                                    Two lives, two hearts, joined together in friendship and love.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="bride-box-container">
+                            <div class="bride-grid">
+                                <!-- Groom -->
+                                <div class="bride-grid__item">
+                                    <div class="bride-card">
+                                        <div class="bride-card-content">
+                                            <span class="bride-role-badge">The Groom</span>
+                                            <h3 class="bride-card-name">Melvin Sabu</h3>
+                                            <div class="bride-card-img-wrap">
+                                                <img src="storage/melvin.jpeg" alt="Melvin Sabu" class="bride-card-img">
+                                            </div>
+                                            <p class="bride-card-relation">
+                                                S/o Sabu Thomas &amp; Nirmala Sabu
+                                            </p>
+                                            <p class="bride-card-address">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#3b82f6" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
+                                                    <path d="M8 0a5 5 0 0 0-5 5c0 3.75 5 11 5 11s5-7.25 5-11a5 5 0 0 0-5-5zm0 7.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                                </svg>
+                                                Koottapalli house, Kanjirappuzha, Palakkad
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Bride -->
+                                <div class="bride-grid__item">
+                                    <div class="bride-card">
+                                        <div class="bride-card-content">
+                                            <span class="bride-role-badge">The Bride</span>
+                                            <h3 class="bride-card-name">Delna Tom</h3>
+                                            <div class="bride-card-img-wrap">
+                                                <img src="storage/delna.jpeg" alt="Delna Tom" class="bride-card-img">
+                                            </div>
+                                            <p class="bride-card-relation">
+                                                D/o Tom Augustine &amp; Bindu Tom
+                                            </p>
+                                            <p class="bride-card-address">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#3b82f6" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
+                                                    <path d="M8 0a5 5 0 0 0-5 5c0 3.75 5 11 5 11s5-7.25 5-11a5 5 0 0 0-5-5zm0 7.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                                </svg>
+                                                Kongamala house, Ottapalam, Palakkad
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 02 - Save The Date Countdown -->
+                    <div id="tab-countdown" class="tab-content__item">
+                        <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
+                            <div class="column">
+                                <h2>Save The Date</h2>
+                            </div>
+                        </div>
+
+                        <div class="countdown-luxury-container">
+                            <div class="countdown-luxury-inner">
+                                <div class="countdown-luxury-sub">SAVE THE DATE</div>
+
+                                <h3 class="countdown-luxury-title">
+                                    COUNTING DOWN<br>
+                                    TO OUR SPECIAL<br>
+                                    DAY
+                                </h3>
+
+                                <div class="countdown-luxury-grid">
+                                    <div class="countdown-luxury-row top-row">
+                                        <div class="countdown-luxury-box">
+                                            <span class="ss-days luxury-num">00</span>
+                                            <span class="luxury-lbl">DAYS</span>
+                                        </div>
+                                        <div class="countdown-luxury-box">
+                                            <span class="ss-hours luxury-num">00</span>
+                                            <span class="luxury-lbl">HOURS</span>
+                                        </div>
+                                        <div class="countdown-luxury-box">
+                                            <span class="ss-minutes luxury-num">00</span>
+                                            <span class="luxury-lbl">MINUTES</span>
+                                        </div>
+                                    </div>
+                                    <div class="countdown-luxury-row bottom-row">
+                                        <div class="countdown-luxury-box">
+                                            <span class="ss-seconds luxury-num">00</span>
+                                            <span class="luxury-lbl">SECONDS</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="countdown-venue-info">
+                                    <strong>Monday &bull; March 29, 2027</strong><br>
+                                    St. Joseph's Forane Church &bull; Pisharody's Auditorium, Ottapalam
+                                </div>
+
+                                <div>
+                                    <a href="https://calendar.google.com/calendar/u/0/r/eventedit?text=Holy+Betrothal+-+Melvin+%26+Delna&dates=20270329T053000Z/20270329T073000Z&details=Holy+Betrothal+Ceremony+of+Melvin+and+Delna&location=St.+Joseph+Forane+Church,+Ottapalam" target="_blank" class="countdown-calendar-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                        </svg>
+                                        Add to Google Calendar
+                                    </a>
+                                </div>
+
+                                <p style="font-style: italic; color: #64748b; font-size: 1.45rem; max-width: 580px; margin: 3rem auto 0 auto; line-height: 1.6;">
+                                    "Two are better than one, because they have a good return for their labor." &mdash; Ecclesiastes 4:9
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 03 - Events -->
+                    <div id="tab-event" class="tab-content__item">
+                        <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
+                            <div class="column">
+                                <h2>Events &amp; Venues</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="column text-center">
+                                <p class="desc" style="max-width: 650px; margin: 0 auto 2.5rem auto; font-size: 1.8rem; color: #556987;">
+                                    We would be delighted to have you join us in celebrating our Holy Betrothal and Reception.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="unified-content-box events-unified-box">
+                            <div class="events-grid">
+                                <!-- Church Event -->
+                                <div class="events-grid__item">
+                                    <div class="event-sample-card">
+                                        <div class="event-card-body">
+                                            <div class="event-card-heart">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                </svg>
+                                            </div>
+
+                                            <h3 class="event-card-title">Holy Betrothal</h3>
+                                            <div class="event-card-date">March 29th</div>
+                                            <div class="event-card-time">11:00 AM Onwards</div>
+
+                                            <div class="event-card-venue">
+                                                St. Joseph's Forane Church<br>Ottapalam, Palakkad, Kerala
+                                            </div>
+
+                                            <div class="event-card-attire">
+                                                Traditional &amp; Festive Formal Attire
+                                            </div>
+
+                                            <a href="https://maps.google.com/?q=St+Joseph+Forane+Church+Ottapalam" target="_blank" class="event-card-btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                    <circle cx="12" cy="10" r="3"></circle>
+                                                </svg>
+                                                Get Church Location
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Reception Event -->
+                                <div class="events-grid__item">
+                                    <div class="event-sample-card">
+                                        <div class="event-card-body">
+                                            <div class="event-card-heart">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                </svg>
+                                            </div>
+
+                                            <h3 class="event-card-title">Reception</h3>
+                                            <div class="event-card-date">March 29th</div>
+                                            <div class="event-card-time">12:30 PM Onwards</div>
+
+                                            <div class="event-card-venue">
+                                                Pisharody's Auditorium<br>Ottapalam, Palakkad, Kerala
+                                            </div>
+
+                                            <div class="event-card-attire">
+                                                Celebration &amp; Feast
+                                            </div>
+
+                                            <a href="https://maps.google.com/?q=Pisharody+Auditorium+Ottapalam" target="_blank" class="event-card-btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                    <circle cx="12" cy="10" r="3"></circle>
+                                                </svg>
+                                                Get Auditorium Location
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 04 - Gallery -->
+                    <div id="tab-gallery" class="tab-content__item">
+                        <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
+                            <div class="column">
+                                <h2>Moments &amp; Memories</h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="column text-center">
+                                <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #556987;">
+                                    Cherished glimpses of our story, celebrations, and unforgettable memories.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="unified-content-box tz-gallery modern-gallery">
+                            <div class="gallery-grid">
+                                <div class="gallery-card-wrap">
+                                    <a class="lightbox gallery-card" href="storage/engagement.jpeg" data-caption="Melvin &amp; Delna">
+                                        <img src="storage/engagement.jpeg" alt="Melvin &amp; Delna" class="gallery-card-img" loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="gallery-card-wrap">
+                                    <a class="lightbox gallery-card" href="storage/outing.jpeg" data-caption="Sweet Outing">
+                                        <img src="storage/outing.jpeg" alt="Sweet Outing" class="gallery-card-img" loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="gallery-card-wrap">
+                                    <a class="lightbox gallery-card" href="storage/airpt_1.jpeg" data-caption="Travel Memories">
+                                        <img src="storage/airpt_1.jpeg" alt="Travel Memories" class="gallery-card-img" loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="gallery-card-wrap">
+                                    <a class="lightbox gallery-card" href="storage/airpt_2.jpeg" data-caption="Journey Together">
+                                        <img src="storage/airpt_2.jpeg" alt="Journey Together" class="gallery-card-img" loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="gallery-card-wrap">
+                                    <a class="lightbox gallery-card" href="storage/delna.jpeg" data-caption="Delna Tom">
+                                        <img src="storage/delna.jpeg" alt="Delna Tom" class="gallery-card-img" loading="lazy">
+                                    </a>
+                                </div>
+                                <div class="gallery-card-wrap">
+                                    <a class="lightbox gallery-card" href="storage/melvin.jpeg" data-caption="Melvin Sabu">
+                                        <img src="storage/melvin.jpeg" alt="Melvin Sabu" class="gallery-card-img" loading="lazy">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 05 - Wishes -->
+                    <div id="tab-wishes" class="tab-content__item">
+                        <div class="row tab-content__item-header text-center" style="margin-bottom: 2rem;">
+                            <div class="column">
+                                <h2>Wishes &amp; Blessings</h2>
+                            </div>
+                        </div>
+
+                        <p class="text-center" style="font-size: 1.8rem; margin: 0 auto 3rem auto; max-width: 680px; color: #556987; line-height: 1.6;">
+                            We sincerely thank you for being a part of our special day, and for your heartfelt prayers, love, and blessings on our betrothal.
+                        </p>
+
+                        <div class="wishes-container-box">
+                            <div class="wishes-grid">
+                                <!-- Form with Netlify Forms Support -->
+                                <div class="wishes-grid__col">
+                                    <form name="wishes" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="wishForm" class="wish-form-card">
+                                        <input type="hidden" name="form-name" value="wishes" />
+                                        <p style="display:none;"><label>Bot field: <input name="bot-field" /></label></p>
+
+                                        <h4 style="font-family: 'Playfair Display', Georgia, serif; color: #0f2e5a; font-size: 2.6rem; font-weight: 700; margin-bottom: 0.8rem;">Send Your Blessings</h4>
+                                        <p style="color: #64748b; font-size: 1.55rem; margin-bottom: 2.5rem; line-height: 1.5;">Leave your heartfelt prayers &amp; wishes for Melvin &amp; Delna</p>
+
+                                        <div style="margin-bottom: 2rem;">
+                                            <label for="wishName" style="font-weight: 600; color: #0f2e5a; font-size: 1.5rem; margin-bottom: 0.8rem; display: block;">Your Name</label>
+                                            <input id="wishName" name="name" type="text" placeholder="Enter your name" required style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 1.3rem 1.6rem; font-size: 16px; background: #f8fafc; color: #1e293b; outline: none; transition: all 0.3s ease;">
+                                        </div>
+
+                                        <div style="margin-bottom: 2.5rem;">
+                                            <label for="wishComment" style="font-weight: 600; color: #0f2e5a; font-size: 1.5rem; margin-bottom: 0.8rem; display: block;">Wishes &amp; Prayers</label>
+                                            <textarea id="wishComment" name="comment" rows="4" placeholder="Write your warm wishes for the couple..." required style="width: 100%; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 1.3rem 1.6rem; font-size: 16px; background: #f8fafc; color: #1e293b; outline: none; transition: all 0.3s ease; resize: vertical; min-height: 110px;"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="wish-submit-btn" style="width: 100%; padding: 1.4rem 2.8rem; background: linear-gradient(135deg, #1d68bd 0%, #3b82f6 55%, #60a5fa 100%); color: #ffffff; border-radius: 9999px; font-size: 1.6rem; font-weight: 600; border: none; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35); cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center;">
+                                            <span>Send Wishes &amp; Blessings</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: middle; margin-left: 8px;">
+                                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.493-7.493Z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Wishes Feed -->
+                                <div class="wishes-grid__col">
+                                    <div class="wishes-feed-card">
+                                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: 1.5px solid #f1f5f9; padding-bottom: 1.2rem;">
+                                            <h4 style="margin: 0; font-family: 'Playfair Display', Georgia, serif; color: #0f2e5a; font-size: 2.2rem; font-weight: 700;">Recent Blessings</h4>
+                                            <span style="font-size: 1.3rem; color: #64748b; font-weight: 600;">Guest Book</span>
+                                        </div>
+                                        <div class="wishes-feed-scroll">
+                                            <div id="wishesList" style="display: flex; flex-direction: column; gap: 1.6rem;">
+                                                <!-- Static pre-loaded blessings -->
+                                                <div class="wish-bubble-item" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 1.8rem 2.2rem; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);">
+                                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                                        <div style="display: flex; align-items: center; gap: 1.2rem;">
+                                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1d68bd, #60a5fa); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.6rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);">
+                                                                F
+                                                            </div>
+                                                            <div>
+                                                                <h5 style="margin: 0; font-size: 1.65rem; font-weight: 700; color: #0f2e5a;">Family &amp; Friends</h5>
+                                                                <span style="font-size: 1.25rem; color: #94a3b8; font-weight: 500;">Warm Wishes</span>
+                                                            </div>
+                                                        </div>
+                                                        <span style="background: #eff6ff; color: #2563eb; font-size: 1.2rem; font-weight: 600; padding: 0.3rem 1rem; border-radius: 9999px; border: 1px solid #bfdbfe;">
+                                                            💙 Blessing
+                                                        </span>
+                                                    </div>
+                                                    <p style="margin: 0; font-size: 1.55rem; color: #334155; line-height: 1.6;">Heartiest congratulations Melvin &amp; Delna! Wishing you both a lifetime of love, joy, and togetherness. May God bless your new journey!</p>
+                                                </div>
+
+                                                <div class="wish-bubble-item" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 1.8rem 2.2rem; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);">
+                                                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                                        <div style="display: flex; align-items: center; gap: 1.2rem;">
+                                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1d68bd, #60a5fa); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.6rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);">
+                                                                P
+                                                            </div>
+                                                            <div>
+                                                                <h5 style="margin: 0; font-size: 1.65rem; font-weight: 700; color: #0f2e5a;">Parishioners &amp; Well-Wishers</h5>
+                                                                <span style="font-size: 1.25rem; color: #94a3b8; font-weight: 500;">Palakkad</span>
+                                                            </div>
+                                                        </div>
+                                                        <span style="background: #eff6ff; color: #2563eb; font-size: 1.2rem; font-weight: 600; padding: 0.3rem 1rem; border-radius: 9999px; border: 1px solid #bfdbfe;">
+                                                            💙 Blessing
+                                                        </span>
+                                                    </div>
+                                                    <p style="margin: 0; font-size: 1.55rem; color: #334155; line-height: 1.6;">Congratulations to both families! So excited to celebrate this joyous occasion with you at St. Joseph's Church and the reception.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <footer class="modern-footer">
+                    <div class="footer-couple-name">Melvin &amp; Delna</div>
+                    <div class="footer-event-date">Holy Betrothal &bull; March 29, 2027 &bull; Ottapalam, Palakkad</div>
+                    <div class="footer-copyright">
+                        <span>With prayers and love from families &bull; &copy; 2026 All Rights Reserved</span>
+                    </div>
+                </footer>
+
+            </div>
+        </div>
+
+        <div class="ss-go-top">
+            <a class="smoothscroll" title="Back to Top" href="#top">
+                <span>Back to Top</span>
+                <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="26" height="26">
+                    <path d="M7.5 1.5l.354-.354L7.5.793l-.354.353.354.354zm-.354.354l4 4 .708-.708-4-4-.708.708zm0-.708l-4 4 .708.708 4-4-.708-.708zM7 1.5V14h1V1.5H7z" fill="currentColor"></path>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="assets/undangan/js/plugins.js"></script>
+    <script src="assets/undangan/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.8.1/baguetteBox.min.js"></script>
+
+    <script>
+        // Live Countdown Timer
+        (function() {
+            const finalDate = new Date("March 29, 2027 11:00:00").getTime();
+            const daysSpans = document.querySelectorAll('.ss-days');
+            const hoursSpans = document.querySelectorAll('.ss-hours');
+            const minutesSpans = document.querySelectorAll('.ss-minutes');
+            const secondsSpans = document.querySelectorAll('.ss-seconds');
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const diff = finalDate - now;
+
+                if (diff <= 0) return;
+
+                let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                let hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                let minutes = Math.floor((diff / 1000 / 60) % 60);
+                let seconds = Math.floor((diff / 1000) % 60);
+
+                if (days <= 9) days = '0' + days;
+                hours = hours <= 9 ? '0' + hours : hours;
+                minutes = minutes <= 9 ? '0' + minutes : minutes;
+                seconds = seconds <= 9 ? '0' + seconds : seconds;
+
+                daysSpans.forEach(el => el.textContent = days);
+                hoursSpans.forEach(el => el.textContent = hours);
+                minutesSpans.forEach(el => el.textContent = minutes);
+                secondsSpans.forEach(el => el.textContent = seconds);
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        })();
+
+        // Lightbox
+        baguetteBox.run('.tz-gallery', {
+            animation: 'fadeIn',
+            noScrollbars: true
+        });
+
+        // Dynamic Guest Name Personalization from URL (?to=Name)
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const to = urlParams.get('to');
+            if (to) {
+                const badge = document.querySelector('#heroBadge span');
+                if (badge) {
+                    badge.textContent = '✨ Cordially Inviting ' + to + ' ✨';
+                }
+            }
+        })();
+
+        // ScrollSpy with Mobile Auto-Centering
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.scroll-nav .tab-nav__list li');
+            const sections = document.querySelectorAll('.tab-content__item');
+            const navList = document.querySelector('.tab-nav__list');
+
+            function updateActiveNav() {
+                const scrollPos = window.pageYOffset + 140;
+                let currentId = '';
+
+                sections.forEach(function(section) {
+                    const top = section.offsetTop;
+                    const height = section.offsetHeight;
+                    if (scrollPos >= top && scrollPos < top + height) {
+                        currentId = section.getAttribute('id');
+                    }
+                });
+
+                if (!currentId && sections.length > 0) {
+                    if (window.pageYOffset < sections[0].offsetTop) {
+                        currentId = sections[0].getAttribute('id');
+                    } else {
+                        currentId = sections[sections.length - 1].getAttribute('id');
+                    }
+                }
+
+                navItems.forEach(function(li) {
+                    const link = li.querySelector('a');
+                    if (link && link.getAttribute('href') === '#' + currentId) {
+                        const wasActive = li.classList.contains('active');
+                        li.classList.add('active');
+                        li.setAttribute('data-tab-active', '');
+                        if (!wasActive && navList && window.innerWidth <= 768) {
+                            const liLeft = li.offsetLeft;
+                            const liWidth = li.offsetWidth;
+                            const listWidth = navList.offsetWidth;
+                            navList.scrollTo({
+                                left: liLeft - (listWidth / 2) + (liWidth / 2),
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        li.classList.remove('active');
+                        li.removeAttribute('data-tab-active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNav, { passive: true });
+            updateActiveNav();
+        });
+
+        // Netlify Wishes Submission & Local Storage Handling
+        (function() {
+            const wishForm = document.getElementById('wishForm');
+            const wishesList = document.getElementById('wishesList');
+
+            function createWishElement(name, comment, timeText) {
+                const bubble = document.createElement('div');
+                bubble.className = 'wish-bubble-item';
+                bubble.style.cssText = 'background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 20px; padding: 1.8rem 2.2rem; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05); animation: fadeIn 0.4s ease;';
+
+                const initial = name ? name.charAt(0).toUpperCase() : 'G';
+                bubble.innerHTML = \`
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1.2rem;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #1d68bd, #60a5fa); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.6rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);">
+                                \${initial}
+                            </div>
+                            <div>
+                                <h5 style="margin: 0; font-size: 1.65rem; font-weight: 700; color: #0f2e5a;">\${name}</h5>
+                                <span style="font-size: 1.25rem; color: #94a3b8; font-weight: 500;">\${timeText}</span>
+                            </div>
+                        </div>
+                        <span style="background: #eff6ff; color: #2563eb; font-size: 1.2rem; font-weight: 600; padding: 0.3rem 1rem; border-radius: 9999px; border: 1px solid #bfdbfe;">
+                            💙 Blessing
+                        </span>
+                    </div>
+                    <p style="margin: 0; font-size: 1.55rem; color: #334155; line-height: 1.6; word-break: break-word;">\${comment}</p>
+                \`;
+                return bubble;
+            }
+
+            // Load stored wishes
+            try {
+                const saved = JSON.parse(localStorage.getItem('melvin_delna_wishes') || '[]');
+                saved.reverse().forEach(w => {
+                    const node = createWishElement(w.name, w.comment, w.time || 'Recently');
+                    wishesList.insertBefore(node, wishesList.firstChild);
+                });
+            } catch(e) {}
+
+            if (wishForm) {
+                wishForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = (document.getElementById('wishName').value || '').trim();
+                    const comment = (document.getElementById('wishComment').value || '').trim();
+
+                    if (!name || !comment) return;
+
+                    // Send to Netlify Form backend
+                    const formData = new FormData(wishForm);
+                    fetch('/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams(formData).toString()
+                    }).catch(err => console.log('Netlify form submission note:', err));
+
+                    // Add immediately to top of list
+                    const node = createWishElement(name, comment, 'Just now');
+                    wishesList.insertBefore(node, wishesList.firstChild);
+
+                    // Persist to localStorage
+                    try {
+                        const saved = JSON.parse(localStorage.getItem('melvin_delna_wishes') || '[]');
+                        saved.push({ name, comment, time: 'Just now' });
+                        localStorage.setItem('melvin_delna_wishes', JSON.stringify(saved));
+                    } catch(e) {}
+
+                    wishForm.reset();
+                    alert('Thank you! Your heartfelt blessings & prayers for Melvin & Delna have been received. 💙');
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>`;
+
+fs.writeFileSync(path.join(distDir, 'index.html'), indexHtmlContent, 'utf8');
+
+console.log('✓ Successfully generated dist/ for Netlify!');
