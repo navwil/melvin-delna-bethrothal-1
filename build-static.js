@@ -109,8 +109,8 @@ const indexHtmlContent = `<!DOCTYPE html>
         }
 
         body {
-            background-color: #f8faff !important;
-            color: #1e293b !important;
+            background-color: #08162b !important;
+            color: #f1f5f9 !important;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         }
 
@@ -127,10 +127,10 @@ const indexHtmlContent = `<!DOCTYPE html>
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #08162b;
         }
         ::-webkit-scrollbar-thumb {
-            background: #93c5fd;
+            background: #1d68bd;
             border-radius: 9999px;
         }
         ::-webkit-scrollbar-thumb:hover {
@@ -227,7 +227,7 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         /* Section Container & Continuous Scroll */
         .s-details {
-            background: #f8faff;
+            background: #08162b;
             padding-top: 2rem;
         }
 
@@ -240,7 +240,7 @@ const indexHtmlContent = `<!DOCTYPE html>
             display: block !important;
             padding-top: 5rem;
             margin-bottom: 5rem;
-            border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
             padding-bottom: 5rem;
         }
 
@@ -265,16 +265,16 @@ const indexHtmlContent = `<!DOCTYPE html>
         .tab-nav__list {
             display: flex;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.94);
+            background: rgba(11, 27, 49, 0.94);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1.5px solid #dbeafe;
+            border: 1.5px solid rgba(59, 130, 246, 0.35);
             border-radius: 9999px;
             padding: 0.5rem;
             gap: 0.5rem;
             max-width: 660px;
             margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
             list-style: none;
         }
 
@@ -292,7 +292,7 @@ const indexHtmlContent = `<!DOCTYPE html>
             letter-spacing: 0.06rem;
             text-transform: uppercase;
             font-weight: 700;
-            color: #1e3a5f;
+            color: #cbd5e1;
             text-decoration: none;
             border-radius: 9999px;
             transition: all 0.3s ease;
@@ -300,14 +300,14 @@ const indexHtmlContent = `<!DOCTYPE html>
         }
 
         .tab-nav__list li:hover a {
-            color: #2563eb;
-            background: rgba(239, 246, 255, 0.8);
+            color: #ffffff;
+            background: rgba(59, 130, 246, 0.2);
         }
 
         .tab-nav__list li.active,
         .tab-nav__list li[data-tab-active] {
             background: linear-gradient(135deg, #1d68bd 0%, #3b82f6 100%);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.45);
         }
 
         .tab-nav__list li.active a,
@@ -328,8 +328,9 @@ const indexHtmlContent = `<!DOCTYPE html>
             position: relative;
             display: inline-block;
             padding-bottom: 1.2rem;
-            color: #0f2e5a;
+            color: #ffffff;
             font-weight: 700;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
         }
 
         .tab-content__item-header h2::after {
@@ -345,11 +346,11 @@ const indexHtmlContent = `<!DOCTYPE html>
         }
 
         .unified-content-box {
-            background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 100%);
-            border: 1.5px solid #dbeafe;
+            background: rgba(13, 33, 61, 0.7);
+            border: 1.5px solid rgba(59, 130, 246, 0.25);
             border-radius: 40px;
             padding: 4.5rem 3rem 4rem 3rem;
-            box-shadow: 0 16px 45px rgba(59, 130, 246, 0.07);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             margin: 2rem auto 3rem auto;
             max-width: 1080px;
             width: 100%;
@@ -377,10 +378,10 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .bride-card {
             position: relative;
-            background: #ffffff;
+            background: radial-gradient(ellipse at 50% 0%, #152d50 0%, #0d203a 65%, #08162b 100%);
             border-radius: 36px;
-            border: 1.5px solid #dbeafe;
-            box-shadow: 0 20px 48px rgba(59, 130, 246, 0.1), 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1.5px solid rgba(96, 165, 250, 0.25);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
             padding: 4.2rem 3rem 3.6rem 3rem;
             text-align: center;
             max-width: 440px;
@@ -392,8 +393,8 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .bride-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 26px 60px rgba(59, 130, 246, 0.18), 0 8px 24px rgba(0, 0, 0, 0.05);
-            border-color: #bfdbfe;
+            box-shadow: 0 26px 60px rgba(59, 130, 246, 0.28), 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-color: rgba(147, 197, 253, 0.5);
         }
 
         .bride-card::before, .event-sample-card::before {
@@ -405,8 +406,8 @@ const indexHtmlContent = `<!DOCTYPE html>
             height: 90%;
             background: linear-gradient(
                 135deg,
-                rgba(255, 255, 255, 0.95) 0%,
-                rgba(255, 255, 255, 0.45) 45%,
+                rgba(255, 255, 255, 0.16) 0%,
+                rgba(255, 255, 255, 0.04) 45%,
                 rgba(255, 255, 255, 0) 72%
             );
             transform: rotate(-14deg);
@@ -422,7 +423,7 @@ const indexHtmlContent = `<!DOCTYPE html>
             left: 10%;
             right: 10%;
             height: 2px;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
             pointer-events: none;
             z-index: 2;
         }
@@ -435,9 +436,9 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .bride-role-badge {
             display: inline-block;
-            background: #eff6ff;
-            color: #1d68bd;
-            border: 1px solid #bfdbfe;
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.35);
             border-radius: 9999px;
             padding: 0.4rem 1.6rem;
             font-size: 1.25rem;
@@ -449,11 +450,12 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .bride-card-name {
             font-family: 'Playfair Display', Georgia, serif;
-            color: #0f2e5a;
+            color: #ffffff !important;
             font-size: 3.2rem;
             font-weight: 700;
             margin-bottom: 1.8rem;
             line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
         }
 
         .bride-card-img-wrap {
@@ -461,8 +463,8 @@ const indexHtmlContent = `<!DOCTYPE html>
             display: inline-block;
             border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.14);
-            border: 2px solid #eff6ff;
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+            border: 2px solid rgba(96, 165, 250, 0.25);
             width: 100%;
             max-width: 350px;
         }
@@ -481,18 +483,20 @@ const indexHtmlContent = `<!DOCTYPE html>
         }
 
         .bride-card-relation {
-            color: #1e293b;
-            font-size: 1.7rem;
+            color: #f8fafc !important;
+            font-size: 1.75rem;
             font-weight: 600;
             margin-bottom: 0.6rem;
             letter-spacing: 0.01em;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
         }
 
         .bride-card-address {
-            color: #64748b;
-            font-size: 1.55rem;
+            color: #93c5fd !important;
+            font-size: 1.6rem;
             margin-top: 0.4rem;
             line-height: 1.5;
+            font-weight: 500;
         }
 
         /* Countdown */
@@ -684,10 +688,10 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .event-sample-card {
             position: relative;
-            background: #ffffff;
+            background: radial-gradient(ellipse at 50% 0%, #152d50 0%, #0d203a 65%, #08162b 100%);
             border-radius: 36px;
-            border: 1.5px solid #dbeafe;
-            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.12), 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1.5px solid rgba(96, 165, 250, 0.25);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.08);
             padding: 4.8rem 3.2rem 4.2rem 3.2rem;
             text-align: center;
             width: 100%;
@@ -701,8 +705,8 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .event-sample-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 28px 65px rgba(59, 130, 246, 0.22), 0 8px 24px rgba(0, 0, 0, 0.05);
-            border-color: #bfdbfe;
+            box-shadow: 0 28px 65px rgba(59, 130, 246, 0.28), 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-color: rgba(147, 197, 253, 0.5);
         }
 
         .event-card-heart {
@@ -716,44 +720,47 @@ const indexHtmlContent = `<!DOCTYPE html>
             width: 40px;
             height: 40px;
             fill: #3b82f6;
-            filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
+            filter: drop-shadow(0 4px 10px rgba(59, 130, 246, 0.45));
         }
 
         .event-card-title {
             font-family: 'Playfair Display', Georgia, serif;
-            color: #0f2e5a;
+            color: #ffffff !important;
             font-size: 3.2rem;
             font-weight: 700;
             letter-spacing: -0.01em;
             margin: 0 0 1.6rem 0;
             line-height: 1.25;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
         }
 
         .event-card-date {
-            color: #1a365d;
-            font-size: 1.95rem;
+            color: #dfba63 !important;
+            font-size: 2.1rem;
             font-weight: 700;
             margin-bottom: 0.4rem;
+            letter-spacing: 0.02em;
+            text-shadow: 0 1px 8px rgba(223, 186, 99, 0.25);
         }
 
         .event-card-time {
-            color: #1a365d;
-            font-size: 1.8rem;
-            font-weight: 700;
+            color: #93c5fd !important;
+            font-size: 1.85rem;
+            font-weight: 600;
             margin-bottom: 2rem;
         }
 
         .event-card-venue {
-            color: #556987;
-            font-size: 1.6rem;
+            color: #f1f5f9 !important;
+            font-size: 1.65rem;
             line-height: 1.65;
             font-weight: 500;
             margin-bottom: 0.8rem;
         }
 
         .event-card-attire {
-            color: #64748b;
-            font-size: 1.5rem;
+            color: #cbd5e1 !important;
+            font-size: 1.55rem;
             line-height: 1.5;
             font-weight: 500;
             margin-bottom: 3rem;
@@ -801,9 +808,9 @@ const indexHtmlContent = `<!DOCTYPE html>
             position: relative;
             border-radius: 24px;
             overflow: hidden;
-            background: #ffffff;
-            border: 1.5px solid #dbeafe;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            background: #0d203a;
+            border: 1.5px solid rgba(59, 130, 246, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
             transition: transform 0.35s ease, box-shadow 0.35s ease;
             aspect-ratio: 4/5;
             width: 100%;
@@ -811,8 +818,8 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         .gallery-card-wrap:hover {
             transform: translateY(-6px);
-            box-shadow: 0 20px 45px rgba(37, 99, 235, 0.18);
-            border-color: #bfdbfe;
+            box-shadow: 0 20px 45px rgba(59, 130, 246, 0.3);
+            border-color: rgba(147, 197, 253, 0.5);
         }
 
         .gallery-card {
@@ -838,11 +845,11 @@ const indexHtmlContent = `<!DOCTYPE html>
 
         /* Wishes */
         .wishes-container-box {
-            background: linear-gradient(180deg, #f0f7ff 0%, #f8faff 100%);
-            border: 1.5px solid #dbeafe;
+            background: rgba(13, 33, 61, 0.7);
+            border: 1.5px solid rgba(59, 130, 246, 0.25);
             border-radius: 40px;
             padding: 4.5rem 3rem 4rem 3rem;
-            box-shadow: 0 16px 45px rgba(59, 130, 246, 0.07);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             margin: 2rem auto 3rem auto;
             max-width: 1080px;
             width: 100%;
@@ -863,31 +870,91 @@ const indexHtmlContent = `<!DOCTYPE html>
         }
 
         .wish-form-card {
-            background: #ffffff;
+            background: radial-gradient(ellipse at 50% 0%, #152d50 0%, #0d203a 65%, #08162b 100%);
             border-radius: 28px;
-            border: 1.5px solid #dbeafe;
+            border: 1.5px solid rgba(96, 165, 250, 0.25);
             padding: 3.5rem 2.8rem;
-            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
             height: 100%;
             width: 100%;
+            color: #ffffff;
         }
 
         .wishes-feed-card {
-            background: #ffffff;
+            background: radial-gradient(ellipse at 50% 0%, #152d50 0%, #0d203a 65%, #08162b 100%);
             border-radius: 28px;
-            border: 1.5px solid #dbeafe;
+            border: 1.5px solid rgba(96, 165, 250, 0.25);
             padding: 3.5rem 2.8rem;
-            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
             height: 100%;
             display: flex;
             flex-direction: column;
             width: 100%;
+            color: #ffffff;
         }
 
         .wishes-feed-scroll {
             max-height: 440px;
             overflow-y: auto;
             padding-right: 0.8rem;
+        }
+
+        .wish-form-card input, .wish-form-card textarea, .wish-form-card select {
+            background: rgba(8, 22, 43, 0.75) !important;
+            border: 1.5px solid rgba(96, 165, 250, 0.3) !important;
+            color: #ffffff !important;
+            border-radius: 14px !important;
+        }
+        .wish-form-card input:focus, .wish-form-card textarea:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+        }
+        .wish-form-card label {
+            color: #e2e8f0 !important;
+            font-weight: 600;
+        }
+        .wishes-feed-card .text-muted, .wishes-feed-card .empty-state {
+            color: #94a3b8 !important;
+        }
+        .wishes-feed-card .wish-item, .wishes-feed-scroll > div {
+            background: rgba(8, 22, 43, 0.6) !important;
+            border: 1px solid rgba(59, 130, 246, 0.2) !important;
+            border-radius: 16px !important;
+            padding: 1.4rem 1.6rem !important;
+            margin-bottom: 1.2rem !important;
+        }
+        .wishes-feed-card .wish-author, .wishes-feed-scroll strong {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+        .wishes-feed-card .wish-time, .wishes-feed-scroll small {
+            color: #94a3b8 !important;
+        }
+        .wishes-feed-card .wish-comment, .wishes-feed-scroll p {
+            color: #e2e8f0 !important;
+        }
+
+        /* High Visibility Text Guarantees */
+        .event-card-title, .bride-card-name {
+            color: #ffffff !important;
+        }
+        .event-card-date {
+            color: #dfba63 !important;
+        }
+        .event-card-time {
+            color: #93c5fd !important;
+        }
+        .event-card-venue {
+            color: #f1f5f9 !important;
+        }
+        .event-card-attire {
+            color: #cbd5e1 !important;
+        }
+        .bride-card-relation {
+            color: #f8fafc !important;
+        }
+        .bride-card-address {
+            color: #93c5fd !important;
         }
 
         /* Footer */
@@ -1241,7 +1308,7 @@ const indexHtmlContent = `<!DOCTYPE html>
 
                         <div class="row">
                             <div class="column text-center">
-                                <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #556987;">
+                                <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #cbd5e1;">
                                     Two lives, two hearts, joined together in friendship and love.
                                 </p>
                             </div>
@@ -1262,7 +1329,7 @@ const indexHtmlContent = `<!DOCTYPE html>
                                                 S/o Sabu Thomas &amp; Nirmala Sabu
                                             </p>
                                             <p class="bride-card-address">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#3b82f6" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#60a5fa" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
                                                     <path d="M8 0a5 5 0 0 0-5 5c0 3.75 5 11 5 11s5-7.25 5-11a5 5 0 0 0-5-5zm0 7.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
                                                 </svg>
                                                 Koottapalli house, Kanjirappuzha, Palakkad
@@ -1284,7 +1351,7 @@ const indexHtmlContent = `<!DOCTYPE html>
                                                 D/o Tom Augustine &amp; Bindu Tom
                                             </p>
                                             <p class="bride-card-address">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#3b82f6" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#60a5fa" viewBox="0 0 16 16" style="vertical-align: middle; margin-right: 5px;">
                                                     <path d="M8 0a5 5 0 0 0-5 5c0 3.75 5 11 5 11s5-7.25 5-11a5 5 0 0 0-5-5zm0 7.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
                                                 </svg>
                                                 Kongamala house, Ottapalam, Palakkad
@@ -1368,7 +1435,7 @@ const indexHtmlContent = `<!DOCTYPE html>
 
                         <div class="row">
                             <div class="column text-center">
-                                <p class="desc" style="max-width: 650px; margin: 0 auto 2.5rem auto; font-size: 1.8rem; color: #556987;">
+                                <p class="desc" style="max-width: 650px; margin: 0 auto 2.5rem auto; font-size: 1.8rem; color: #cbd5e1;">
                                     We would be delighted to have you join us in celebrating our Holy Betrothal and Reception.
                                 </p>
                             </div>
@@ -1455,7 +1522,7 @@ const indexHtmlContent = `<!DOCTYPE html>
 
                         <div class="row">
                             <div class="column text-center">
-                                <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #556987;">
+                                <p class="desc" style="max-width: 650px; margin: 0 auto 3rem auto; font-size: 1.8rem; color: #cbd5e1;">
                                     Cherished glimpses of our story, celebrations, and unforgettable memories.
                                 </p>
                             </div>
@@ -1505,7 +1572,7 @@ const indexHtmlContent = `<!DOCTYPE html>
                             </div>
                         </div>
 
-                        <p class="text-center" style="font-size: 1.8rem; margin: 0 auto 3rem auto; max-width: 680px; color: #556987; line-height: 1.6;">
+                        <p class="text-center" style="font-size: 1.8rem; margin: 0 auto 3rem auto; max-width: 680px; color: #cbd5e1; line-height: 1.6;">
                             We sincerely thank you for being a part of our special day, and for your heartfelt prayers, love, and blessings on our betrothal.
                         </p>
 
